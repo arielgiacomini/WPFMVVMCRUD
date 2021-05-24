@@ -13,11 +13,16 @@ namespace WpfMvvmCrud.ViewModel
 
         public DeletarCommand Deletar { get; private set; } = new DeletarCommand();
 
+        public NovoCommand Novo { get; private set; } = new NovoCommand();
 
         public Funcionario FuncionarioSelecionado
         {
             get { return _funcionarioSelecionado; }
-            set { SetField(ref _funcionarioSelecionado, value); }
+            set
+            {
+                SetField(ref _funcionarioSelecionado, value);
+                Deletar.RaiseCanExecuteChanged();
+            }
         }
 
         public FuncionariosViewModel()
@@ -52,6 +57,36 @@ namespace WpfMvvmCrud.ViewModel
                 var viewModel = (FuncionariosViewModel)parameter;
                 viewModel.Funcionarios.Remove(viewModel.FuncionarioSelecionado);
                 viewModel.FuncionarioSelecionado = viewModel.Funcionarios.FirstOrDefault();
+            }
+        }
+
+        public class NovoCommand : BaseCommand
+        {
+            public override bool CanExecute(object parameter)
+            {
+                return parameter is FuncionariosViewModel;
+            }
+
+            public override void Execute(object parameter)
+            {
+                var viewModel = (FuncionariosViewModel)parameter;
+                var funcionario = new Model.Funcionario();
+                var maxId = 0;
+                if (viewModel.Funcionarios.Any())
+                {
+                    maxId = viewModel.Funcionarios.Max(f => f.Id);
+                }
+                funcionario.Id = maxId + 1;
+
+                var fw = new FuncionarioWindow();
+                fw.DataContext = funcionario;
+                fw.ShowDialog();
+
+                if (fw.DialogResult.HasValue && fw.DialogResult.Value)
+                {
+                    viewModel.Funcionarios.Add(funcionario);
+                    viewModel.FuncionarioSelecionado = funcionario;
+                }
             }
         }
     }

@@ -13,7 +13,11 @@
             <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Margin="3" Padding="3" Content="Novo"/>
+            <Button Margin="3" 
+                    Padding="3" 
+                    CommandParameter="{Binding}"
+                    Command="{Binding Novo}"
+                    Content="Novo"/>
             <Button Margin="3" Padding="3" Content="Editar"/>
             <Button Margin="3" 
                     Padding="3"

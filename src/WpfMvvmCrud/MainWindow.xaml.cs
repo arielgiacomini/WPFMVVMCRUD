@@ -8,6 +8,7 @@ namespace WpfMvvmCrud
         public FuncionariosWindow()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             DataContext = new FuncionariosViewModel();
         }
     }
